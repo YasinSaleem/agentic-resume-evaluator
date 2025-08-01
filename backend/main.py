@@ -1,8 +1,7 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from backend.agents.parsing_agent import heuristic_section_parser
-from backend.services.gemini_agent import gemini_section_parser
-from backend.agents.input_agent import InputAgent
+from services.gemini_agent import gemini_section_parser
+from agents.input_agent import InputAgent
 
 app = FastAPI()
 
@@ -20,18 +19,33 @@ async def root():
     return {"message": "✅ Smart Resume Evaluator API is running. Use /docs to try it out."}
 
 @app.post("/parse-resume/")
-async def parse_resume(file: UploadFile = File(...), method: str = "heuristic"):
+async def parse_resume(file: UploadFile = File(...)):
     file_bytes = await file.read()
     filename = file.filename
 
     try:
-        text = InputAgent.parse_resume_file(file_bytes, filename)
+        # Extract text from resume using InputAgent
+        extracted_text = InputAgent.parse_resume_file(file_bytes, filename)
+        
+        # Parse the extracted text using Gemini agent
+        result = gemini_section_parser(extracted_text)
+        
+        return {
+            "success": True,
+            "filename": filename,
+            "parsed_sections": result,
+            "raw_text_length": len(extracted_text)
+        }
+        
     except ValueError as e:
-        return {"error": str(e)}
-
-    if method == "gemini":
-        result = gemini_section_parser(text)
-    else:
-        result = heuristic_section_parser(text)
-
-    return {"parsed": result}
+        return {
+            "success": False,
+            "error": str(e),
+            "filename": filename
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"Unexpected error: {str(e)}",
+            "filename": filename
+        }
