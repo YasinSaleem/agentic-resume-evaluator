@@ -1,6 +1,6 @@
 Run backend by running the following in the backend directory:
 
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 
 Run frontend by running the following in the frontend directory:
 
