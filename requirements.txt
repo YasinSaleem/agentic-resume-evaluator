@@ -8,4 +8,6 @@ python-docx
 spacy
 transformers
 google-generativeai
-dotenv
+python-dotenv
+scikit-learn
+numpy

@@ -46,6 +46,9 @@ export default function App({ Component, pageProps }) {
         flexDirection: 'column'
       }}>
         <header style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1000,
           width: '100%',
           display: 'flex',
           justifyContent: 'space-between',

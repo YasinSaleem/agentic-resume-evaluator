@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from services.gemini_agent import gemini_section_parser
 from agents.input_agent import InputAgent
+from routes.resume import router as resume_router
 
 app = FastAPI()
 
@@ -13,6 +14,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(resume_router, prefix="/api/resume", tags=["resume"])
 
 @app.get("/")
 async def root():
