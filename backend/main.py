@@ -16,7 +16,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"message": "✅ Smart Resume Evaluator API is running. Use /docs to try it out."}
+    return {"message": "Smart Resume Evaluator API is running. Use /docs to try it out."}
 
 @app.post("/parse-resume/")
 async def parse_resume(file: UploadFile = File(...)):
