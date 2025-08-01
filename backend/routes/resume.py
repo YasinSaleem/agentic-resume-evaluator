@@ -1,8 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from fastapi.responses import JSONResponse
 from agents.input_agent import InputAgent
-from agents.parsing_agent import heuristic_section_parser
-# from app.agents.parsing_agent import llm_section_parser, llm_func  # See below for LLM setup
+from services.gemini_agent import gemini_section_parser
 
 router = APIRouter()
 
@@ -14,13 +13,13 @@ async def evaluate(
     try:
         content = await resume.read()
         extracted_text = InputAgent.parse_resume_file(content, resume.filename)
-        # Use heuristic parser for now
-        sections = heuristic_section_parser(extracted_text)
-        # For LLM: uncomment and implement llm_func to call Gemini or another API.
-        # sections = llm_section_parser(extracted_text, llm_func)
+        # Use Gemini agent for parsing
+        sections = gemini_section_parser(extracted_text)
         return JSONResponse({
+            "success": True,
             "sections": sections,
-            "job_description": job_desc
+            "job_description": job_desc,
+            "filename": resume.filename
         })
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
