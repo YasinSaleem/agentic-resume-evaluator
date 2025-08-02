@@ -25,8 +25,9 @@ This project provides an intelligent resume evaluation system that uses Gemini A
 ### Backend Architecture
 
 #### Services
-- `gemini_agent.py`: Handles resume section parsing
-- `resume_evaluator.py`: New service for resume evaluation and scoring
+- `input_parser`: Extracts text from thhe uploaded resume doc
+- `gemini_agent.py`: Handles section parsing of the extracted text
+- `resume_evaluator.py`: ATS-like resume evaluation and scoring with feedback and explanation
 
 #### Evaluation Metrics
 1. **Cosine Similarity**: Uses scikit-learn TF-IDF vectorization
