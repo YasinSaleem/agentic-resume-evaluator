@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+langchain
+pydantic
+python-multipart
+PyPDF2
+python-docx
+spacy
+transformers
+google-generativeai
+python-dotenv
+scikit-learn
+numpy
