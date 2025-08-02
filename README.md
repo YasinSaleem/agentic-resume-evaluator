@@ -2,6 +2,10 @@
 
 This project provides an intelligent resume evaluation system that uses Gemini AI to analyze resume suitability against job descriptions.
 
+<img width="1290" height="735" alt="Screenshot 2025-08-02 at 11 08 47 AM" src="https://github.com/user-attachments/assets/30ea3336-a03c-4e89-b723-144e461bf739" />
+
+<img width="1288" height="734" alt="Screenshot 2025-08-02 at 11 09 32 AM" src="https://github.com/user-attachments/assets/bf173232-ee41-4de3-9d0b-852e3dac2575" />
+
 ## Features
 
 ### 1. Resume Parsing
