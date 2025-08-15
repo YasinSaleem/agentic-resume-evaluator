@@ -289,7 +289,7 @@ export default function Home() {
       formData.append('file', resume);
       formData.append('job_description', jobDesc.trim());
 
-      const response = await fetch('http://127.0.0.1:8000/api/resume/evaluate', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/resume/evaluate`, {
         method: 'POST',
         body: formData,
       });
