@@ -289,10 +289,13 @@ export default function Home() {
       formData.append('file', resume);
       formData.append('job_description', jobDesc.trim());
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/resume/evaluate`, {
-        method: 'POST',
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"; // change port if needed
+
+            const response = await fetch(`${apiUrl}/api/resume/evaluate`, {
+        method: "POST",
         body: formData,
       });
+
 
       const data = await response.json();
 
