@@ -1,0 +1,16 @@
+[Unit]
+Description=Resume Evaluator Frontend
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/agentic-resume-evaluator/frontend
+Environment=NODE_ENV=production
+Environment=NEXT_PUBLIC_API_URL=http://localhost:8000
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

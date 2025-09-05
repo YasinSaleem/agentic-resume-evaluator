@@ -78,7 +78,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 1. **Start Backend**:
 ```bash
 cd backend
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
 2. **Start Frontend**:

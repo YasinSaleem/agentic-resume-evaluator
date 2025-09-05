@@ -22,6 +22,10 @@ app.include_router(resume_router, prefix="/api/resume", tags=["resume"])
 async def root():
     return {"message": "Smart Resume Evaluator API is running. Use /docs to try it out."}
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "resume-evaluator-api"}
+
 @app.post("/parse-resume/")
 async def parse_resume(file: UploadFile = File(...)):
     file_bytes = await file.read()
