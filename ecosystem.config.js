@@ -2,10 +2,8 @@ module.exports = {
   apps: [
     {
       name: 'resume-evaluator-backend',
-      script: './backend/main.py',
-      interpreter: 'python3',
-      interpreter_args: '-m uvicorn main:app',
-      args: '--host 0.0.0.0 --port 8000',
+      script: './venv/bin/uvicorn',
+      args: 'main:app --host 0.0.0.0 --port 8000',
       cwd: './backend',
       instances: 1,
       autorestart: true,
