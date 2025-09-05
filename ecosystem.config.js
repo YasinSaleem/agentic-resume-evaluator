@@ -23,8 +23,8 @@ module.exports = {
     },
     {
       name: 'resume-evaluator-frontend',
-      script: 'node',
-      args: '.next/standalone/server.js',
+      script: 'npm',
+      args: 'start',
       cwd: './frontend',
       instances: 1,
       autorestart: true,
