@@ -48,12 +48,16 @@ if ! command -v nginx &> /dev/null; then
 fi
 
 # Clone repository (if not already present)
-if [ ! -d "agentic-resume-evaluator" ]; then
+if [ ! -d "backend" ] && [ ! -d "frontend" ]; then
     echo "📥 Cloning repository..."
+    cd ..
     git clone https://github.com/YasinSaleem/agentic-resume-evaluator.git
+    cd agentic-resume-evaluator
+else
+    echo "📥 Repository already present..."
+    # Make sure we're in the right branch
+    git checkout deployment 2>/dev/null || echo "Already on deployment branch"
 fi
-
-cd agentic-resume-evaluator
 
 # Create logs directory
 mkdir -p logs
