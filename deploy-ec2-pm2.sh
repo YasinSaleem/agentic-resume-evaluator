@@ -8,26 +8,22 @@ set -e
 echo "🚀 Starting PM2-based deployment on EC2..."
 
 # Update system packages
-sudo apt update && sudo apt upgrade -y
+sudo yum update -y
 
 # Install Node.js 18 LTS
 if ! command -v node &> /dev/null; then
     echo "📦 Installing Node.js 18..."
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+    sudo yum install -y nodejs
 fi
 
-# Install Python 3.12 if not present
-if ! command -v python3.12 &> /dev/null; then
-    echo "📦 Installing Python 3.12..."
-    sudo apt update
-    sudo apt install software-properties-common -y
-    sudo add-apt-repository ppa:deadsnakes/ppa -y
-    sudo apt update
-    sudo apt install python3.12 python3.12-venv python3.12-dev python3-pip -y
+# Install Python 3.11 (Amazon Linux 2023 default)
+if ! command -v python3.11 &> /dev/null; then
+    echo "📦 Installing Python 3.11..."
+    sudo yum install -y python3.11 python3.11-pip python3.11-devel
     
     # Create symlink for python3
-    sudo ln -sf /usr/bin/python3.12 /usr/bin/python3
+    sudo ln -sf /usr/bin/python3.11 /usr/bin/python3
 fi
 
 # Install PM2 globally
@@ -39,7 +35,7 @@ fi
 # Install nginx for reverse proxy
 if ! command -v nginx &> /dev/null; then
     echo "📦 Installing Nginx..."
-    sudo apt install nginx -y
+    sudo yum install -y nginx
 fi
 
 # Clone repository (if not already present)
@@ -58,7 +54,7 @@ echo "🐍 Setting up backend..."
 cd backend
 
 # Create virtual environment
-python3.12 -m venv venv
+python3.11 -m venv venv
 source venv/bin/activate
 
 # Install Python dependencies
