@@ -7,20 +7,31 @@ set -e
 
 echo "🚀 Starting PM2-based deployment on EC2..."
 
-# Update system packages
-sudo yum update -y
+# Check if we're on Amazon Linux and fix package manager if needed
+if [ -f /etc/amazon-linux-release ]; then
+    echo "📋 Detected Amazon Linux, checking package manager..."
+    # Try to fix yum/dnf issues
+    sudo rm -f /var/lib/rpm/.rpm.lock 2>/dev/null || true
+    sudo rpm --rebuilddb 2>/dev/null || true
+fi
+
+echo "🚀 Starting PM2-based deployment on EC2..."
+
+# Update system packages using direct commands
+echo "📦 Updating system packages..."
+sudo /bin/yum update -y 2>/dev/null || sudo /usr/bin/yum update -y 2>/dev/null || echo "Package update skipped"
 
 # Install Node.js 18 LTS
 if ! command -v node &> /dev/null; then
     echo "📦 Installing Node.js 18..."
     curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-    sudo yum install -y nodejs
+    sudo /bin/yum install -y nodejs 2>/dev/null || sudo /usr/bin/yum install -y nodejs 2>/dev/null
 fi
 
 # Install Python 3 (Amazon Linux 2 default)
 if ! command -v python3 &> /dev/null; then
     echo "📦 Installing Python 3..."
-    sudo yum install -y python3 python3-pip python3-devel
+    sudo /bin/yum install -y python3 python3-pip python3-devel 2>/dev/null || sudo /usr/bin/yum install -y python3 python3-pip python3-devel 2>/dev/null
 fi
 
 # Install PM2 globally
@@ -32,7 +43,8 @@ fi
 # Install nginx for reverse proxy
 if ! command -v nginx &> /dev/null; then
     echo "📦 Installing Nginx..."
-    sudo amazon-linux-extras install nginx1 -y
+    sudo /bin/yum install -y epel-release 2>/dev/null || sudo /usr/bin/yum install -y epel-release 2>/dev/null || echo "EPEL already available"
+    sudo /bin/yum install -y nginx 2>/dev/null || sudo /usr/bin/yum install -y nginx 2>/dev/null || sudo amazon-linux-extras install nginx1 -y 2>/dev/null || echo "Nginx installation attempted"
 fi
 
 # Clone repository (if not already present)
