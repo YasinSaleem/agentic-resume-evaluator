@@ -88,24 +88,33 @@ cd frontend
 
 # Install dependencies and build
 npm ci
-npm run build
 
 cd ..
 
 # Update environment files for production
 echo "⚙️ Updating environment files..."
+
+# Get the public IP for environment files
+PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "localhost")
+
 cat > backend/.env << EOF
 GEMINI_API_KEY=\${GEMINI_API_KEY:-your_gemini_api_key_here}
 HOST=0.0.0.0
 PORT=8000
 ENVIRONMENT=production
-ALLOWED_ORIGINS=http://localhost:3000,https://\$(curl -s ifconfig.me)
+ALLOWED_ORIGINS=http://localhost:3000,http://\${PUBLIC_IP}:3000,http://\${PUBLIC_IP}
 EOF
 
-cat > frontend/.env << EOF
-NEXT_PUBLIC_API_URL=http://localhost:8000
+cat > frontend/.env.local << EOF
+NEXT_PUBLIC_API_URL=http://\${PUBLIC_IP}:8000
 NODE_ENV=production
 EOF
+
+# Now build the frontend with the environment variables
+echo "🔨 Building frontend with production environment..."
+cd frontend
+npm run build
+cd ..
 
 # Setup PM2 processes
 echo "🔧 Starting PM2 processes..."
