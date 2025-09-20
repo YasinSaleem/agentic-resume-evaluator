@@ -1,0 +1,53 @@
+---
+- name: Deploy Resume Evaluator App
+  hosts: resume-evaluator
+  become: yes
+  vars:
+    app_dir: /home/ec2-user/agentic-resume-evaluator
+    branch: deployment
+  tasks:
+    - name: Ensure git is installed
+      yum:
+        name: git
+        state: present
+
+    - name: Ensure Node.js and Python3 are installed
+      yum:
+        name:
+          - nodejs
+          - npm
+          - python3
+          - python3-venv
+        state: present
+
+    - name: Pull latest code
+      git:
+        repo: https://github.com/YasinSaleem/agentic-resume-evaluator.git
+        dest: "{{ app_dir }}"
+        version: "{{ branch }}"
+        force: yes
+
+    - name: Setup backend virtualenv
+      command: python3 -m venv venv
+      args:
+        chdir: "{{ app_dir }}/backend"
+      ignore_errors: yes
+
+    - name: Install backend requirements
+      pip:
+        requirements: "{{ app_dir }}/backend/requirements.txt"
+        virtualenv: "{{ app_dir }}/backend/venv"
+
+    - name: Install frontend dependencies
+      npm:
+        path: "{{ app_dir }}/frontend"
+        production: yes
+
+    - name: Build frontend
+      command: npm run build
+      args:
+        chdir: "{{ app_dir }}/frontend"
+
+    - name: Restart PM2 processes
+      command: pm2 restart all
+      ignore_errors: yes
