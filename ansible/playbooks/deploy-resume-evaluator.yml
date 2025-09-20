@@ -17,7 +17,7 @@
           - nodejs
           - npm
           - python3
-          - python3-venv
+          - python3-virtualenv
         state: present
 
     - name: Pull latest code
@@ -27,8 +27,13 @@
         version: "{{ branch }}"
         force: yes
 
+    - name: Ensure pip is installed
+      yum:
+        name: python3-pip
+        state: present
+
     - name: Setup backend virtualenv
-      command: python3 -m venv venv
+      command: python3 -m virtualenv venv
       args:
         chdir: "{{ app_dir }}/backend"
       ignore_errors: yes
@@ -47,6 +52,11 @@
       command: npm run build
       args:
         chdir: "{{ app_dir }}/frontend"
+
+    - name: Ensure PM2 is installed globally
+      npm:
+        name: pm2
+        global: yes
 
     - name: Restart PM2 processes
       command: pm2 restart all
