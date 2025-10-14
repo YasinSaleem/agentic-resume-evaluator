@@ -71,7 +71,7 @@
       command: pm2 reload ecosystem.config.js --env production
       args:
         chdir: "{{ app_dir }}"
-      ignore_errors: yes
+      ignore_errors: no
 
     - name: Save PM2 process list for auto-resurrection
       command: pm2 save
