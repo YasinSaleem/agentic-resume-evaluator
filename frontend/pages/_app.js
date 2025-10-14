@@ -65,7 +65,7 @@ export default function App({ Component, pageProps }) {
             color: activeTheme.text,
             lineHeight: '1.2'
           }}>
-            Resume Evaluator
+            Testing CI/CD Pipeline
           </div>
           <button
             onClick={toggleTheme}
