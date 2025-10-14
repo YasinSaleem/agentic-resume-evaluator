@@ -53,8 +53,6 @@ export default function App({ Component, pageProps }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '1rem',
           padding: '1rem 2rem',
           background: activeTheme.card,
           borderBottom: `1px solid ${activeTheme.border}`,
@@ -85,9 +83,7 @@ export default function App({ Component, pageProps }) {
               alignItems: 'center',
               justifyContent: 'center',
               flexShrink: 0,
-              transition: 'all 0.2s ease',
-              position: 'relative',
-              zIndex: 2
+              transition: 'all 0.2s ease'
             }}
             aria-label="Toggle dark/light mode"
           >
