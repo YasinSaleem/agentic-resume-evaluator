@@ -65,7 +65,7 @@ export default function App({ Component, pageProps }) {
             color: activeTheme.text,
             lineHeight: '1.2'
           }}>
-            Resume Evaluator v2
+            Agentic Resume Evaluator v2
           </div>
           <button
             onClick={toggleTheme}
