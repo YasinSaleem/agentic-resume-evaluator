@@ -48,12 +48,19 @@
     - name: Install frontend dependencies
       npm:
         path: "{{ frontend_dir }}"
-        production: yes
+        production: no # Install dev dependencies as well
+
+    - name: Clean frontend build
+      file:
+        path: "{{ frontend_dir }}/build"
+        state: absent
 
     - name: Build frontend
       command: npm run build
       args:
         chdir: "{{ frontend_dir }}"
+      register: build_output
+      failed_when: build_output.rc != 0
 
     - name: Ensure PM2 is installed globally
       npm:
