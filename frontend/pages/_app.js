@@ -65,7 +65,7 @@ export default function App({ Component, pageProps }) {
             color: activeTheme.text,
             lineHeight: '1.2'
           }}>
-            Resume Evaluator Test
+            Resume Eval
           </div>
           <button
             onClick={toggleTheme}
