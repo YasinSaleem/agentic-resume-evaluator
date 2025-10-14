@@ -38,7 +38,7 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',
         PORT: 3000,
-        NEXT_PUBLIC_API_URL: 'http://localhost:8000'
+        NEXT_PUBLIC_API_URL: 'http://51.20.154.236:8000'
       },
       error_file: './logs/frontend-error.log',
       out_file: './logs/frontend-out.log',
