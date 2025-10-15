@@ -12,21 +12,6 @@ provider "aws" {
 }
 
 # ------------------------
-# Jenkins-Server
-# ------------------------
-resource "aws_instance" "jenkins_server" {
-  ami                    = "ami-0a716d3f3b16d290c"
-  instance_type          = "t3.micro"
-  key_name               = "ResumeEvaluator"
-  subnet_id              = "subnet-0d4dd138cb92009ae"
-  vpc_security_group_ids = ["sg-00dd88af33f2e9571"]
-
-  tags = {
-    Name = "Jenkins-Server"
-  }
-}
-
-# ------------------------
 # Resume-Evaluator
 # ------------------------
 resource "aws_instance" "resume_evaluator" {
