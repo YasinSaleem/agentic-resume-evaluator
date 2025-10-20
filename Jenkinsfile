@@ -39,8 +39,11 @@ pipeline {
                     
                     if (exitCode == 0) {
                         env.TERRAFORM_CHANGED = 'true'
+                        currentBuild.displayName = "#${BUILD_NUMBER} - Infrastructure Update"
                         echo "✅ Terraform files changed - will run infrastructure update"
                     } else {
+                        env.TERRAFORM_CHANGED = 'false'
+                        currentBuild.displayName = "#${BUILD_NUMBER} - App Deploy Only"
                         echo "⏭️  No Terraform changes detected - skipping infrastructure stage"
                     }
                 }
@@ -49,7 +52,7 @@ pipeline {
 
         stage('Terraform Init') {
             when {
-                expression { env.TERRAFORM_CHANGED == 'true' }
+                expression { return env.TERRAFORM_CHANGED == 'true' }
             }
             steps {
                 dir('terraform') {
@@ -63,7 +66,7 @@ pipeline {
 
         stage('Terraform Plan') {
             when {
-                expression { env.TERRAFORM_CHANGED == 'true' }
+                expression { return env.TERRAFORM_CHANGED == 'true' }
             }
             steps {
                 dir('terraform') {
@@ -81,7 +84,7 @@ pipeline {
 
         stage('Terraform Apply') {
             when {
-                expression { env.TERRAFORM_CHANGED == 'true' }
+                expression { return env.TERRAFORM_CHANGED == 'true' }
             }
             steps {
                 dir('terraform') {
@@ -100,7 +103,7 @@ pipeline {
 
         stage('Update Ansible Inventory') {
             when {
-                expression { env.TERRAFORM_CHANGED == 'true' }
+                expression { return env.TERRAFORM_CHANGED == 'true' }
             }
             steps {
                 sh '''
@@ -116,7 +119,7 @@ pipeline {
 
         stage('Wait for Instances') {
             when {
-                expression { env.TERRAFORM_CHANGED == 'true' }
+                expression { return env.TERRAFORM_CHANGED == 'true' }
             }
             steps {
                 script {
