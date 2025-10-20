@@ -51,80 +51,93 @@ pipeline {
         }
 
         stage('Terraform Init') {
-            when {
-                expression { return env.TERRAFORM_CHANGED == 'true' }
-            }
             steps {
-                dir('terraform') {
-                    sh '''
-                        echo "🔧 Initializing Terraform..."
-                        terraform init
-                    '''
+                script {
+                    if (env.TERRAFORM_CHANGED == 'true') {
+                        dir('terraform') {
+                            sh '''
+                                echo "🔧 Initializing Terraform..."
+                                terraform init
+                            '''
+                        }
+                    } else {
+                        echo "⏭️ Skipping Terraform Init - no changes detected"
+                    }
                 }
             }
         }
 
         stage('Terraform Plan') {
-            when {
-                expression { return env.TERRAFORM_CHANGED == 'true' }
-            }
             steps {
-                dir('terraform') {
-                    sh '''
-                        echo "📋 Planning Terraform changes..."
-                        terraform plan -out=tfplan
-                        terraform show -no-color tfplan > tfplan.txt
-                    '''
-                    
-                    archiveArtifacts artifacts: 'tfplan.txt', fingerprint: true
-                    sh 'cat tfplan.txt'
+                script {
+                    if (env.TERRAFORM_CHANGED == 'true') {
+                        dir('terraform') {
+                            sh '''
+                                echo "📋 Planning Terraform changes..."
+                                terraform plan -out=tfplan
+                                terraform show -no-color tfplan > tfplan.txt
+                            '''
+                            
+                            archiveArtifacts artifacts: 'tfplan.txt', fingerprint: true
+                            sh 'cat tfplan.txt'
+                        }
+                    } else {
+                        echo "⏭️ Skipping Terraform Plan - no changes detected"
+                    }
                 }
             }
         }
 
         stage('Terraform Apply') {
-            when {
-                expression { return env.TERRAFORM_CHANGED == 'true' }
-            }
             steps {
-                dir('terraform') {
-                    sh '''
-                        echo "🚀 Applying Terraform changes..."
-                        terraform apply -auto-approve tfplan
-                        
-                        echo ""
-                        echo "📊 Infrastructure Outputs:"
-                        terraform output -json > outputs.json
-                        terraform output
-                    '''
+                script {
+                    if (env.TERRAFORM_CHANGED == 'true') {
+                        dir('terraform') {
+                            sh '''
+                                echo "🚀 Applying Terraform changes..."
+                                terraform apply -auto-approve tfplan
+                                
+                                echo ""
+                                echo "📊 Infrastructure Outputs:"
+                                terraform output -json > outputs.json
+                                terraform output
+                            '''
+                        }
+                    } else {
+                        echo "⏭️ Skipping Terraform Apply - no changes detected"
+                    }
                 }
             }
         }
 
         stage('Update Ansible Inventory') {
-            when {
-                expression { return env.TERRAFORM_CHANGED == 'true' }
-            }
             steps {
-                sh '''
-                    echo "📝 Updating Ansible inventory from Terraform outputs..."
-                    bash scripts/update_inventory.sh
-                    
-                    echo ""
-                    echo "✅ Updated Inventory:"
-                    cat ansible/inventory/hosts.ini
-                '''
+                script {
+                    if (env.TERRAFORM_CHANGED == 'true') {
+                        sh '''
+                            echo "📝 Updating Ansible inventory from Terraform outputs..."
+                            bash scripts/update_inventory.sh
+                            
+                            echo ""
+                            echo "✅ Updated Inventory:"
+                            cat ansible/inventory/hosts.ini
+                        '''
+                    } else {
+                        echo "⏭️ Skipping inventory update - no infrastructure changes"
+                    }
+                }
             }
         }
 
         stage('Wait for Instances') {
-            when {
-                expression { return env.TERRAFORM_CHANGED == 'true' }
-            }
             steps {
                 script {
-                    echo "⏳ Waiting for instances to be fully ready..."
-                    sleep(time: 30, unit: 'SECONDS')
+                    if (env.TERRAFORM_CHANGED == 'true') {
+                        echo "⏳ Waiting for instances to be fully ready..."
+                        sleep(time: 30, unit: 'SECONDS')
+                    } else {
+                        echo "⏭️ Skipping wait - no new instances created"
+                    }
                 }
             }
         }
