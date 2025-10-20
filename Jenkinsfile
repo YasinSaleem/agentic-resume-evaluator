@@ -6,7 +6,6 @@ pipeline {
         ANSIBLE_PLAYBOOK = "ansible/playbooks/deploy-resume-evaluator.yml"
         INVENTORY_FILE = "ansible/inventory/hosts.ini"
         SSH_CREDENTIAL_ID = "jenkins-ec2-ssh"
-        TERRAFORM_CHANGED = 'false'
     }
 
     stages {
@@ -38,11 +37,11 @@ pipeline {
                     )
                     
                     if (exitCode == 0) {
-                        env.TERRAFORM_CHANGED = 'true'
+                        writeFile file: 'terraform_changed.flag', text: 'true'
                         currentBuild.displayName = "#${BUILD_NUMBER} - Infrastructure Update"
                         echo "✅ Terraform files changed - will run infrastructure update"
                     } else {
-                        env.TERRAFORM_CHANGED = 'false'
+                        writeFile file: 'terraform_changed.flag', text: 'false'
                         currentBuild.displayName = "#${BUILD_NUMBER} - App Deploy Only"
                         echo "⏭️  No Terraform changes detected - skipping infrastructure stage"
                     }
@@ -53,7 +52,8 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 script {
-                    if (env.TERRAFORM_CHANGED == 'true') {
+                    def terraformChanged = readFile('terraform_changed.flag').trim()
+                    if (terraformChanged == 'true') {
                         dir('terraform') {
                             sh '''
                                 echo "🔧 Initializing Terraform..."
@@ -70,7 +70,8 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 script {
-                    if (env.TERRAFORM_CHANGED == 'true') {
+                    def terraformChanged = readFile('terraform_changed.flag').trim()
+                    if (terraformChanged == 'true') {
                         dir('terraform') {
                             sh '''
                                 echo "📋 Planning Terraform changes..."
@@ -91,7 +92,8 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 script {
-                    if (env.TERRAFORM_CHANGED == 'true') {
+                    def terraformChanged = readFile('terraform_changed.flag').trim()
+                    if (terraformChanged == 'true') {
                         dir('terraform') {
                             sh '''
                                 echo "🚀 Applying Terraform changes..."
@@ -113,7 +115,8 @@ pipeline {
         stage('Update Ansible Inventory') {
             steps {
                 script {
-                    if (env.TERRAFORM_CHANGED == 'true') {
+                    def terraformChanged = readFile('terraform_changed.flag').trim()
+                    if (terraformChanged == 'true') {
                         sh '''
                             echo "📝 Updating Ansible inventory from Terraform outputs..."
                             bash scripts/update_inventory.sh
@@ -132,7 +135,8 @@ pipeline {
         stage('Wait for Instances') {
             steps {
                 script {
-                    if (env.TERRAFORM_CHANGED == 'true') {
+                    def terraformChanged = readFile('terraform_changed.flag').trim()
+                    if (terraformChanged == 'true') {
                         echo "⏳ Waiting for instances to be fully ready..."
                         sleep(time: 30, unit: 'SECONDS')
                     } else {
@@ -160,7 +164,8 @@ pipeline {
     post {
         success {
             script {
-                if (env.TERRAFORM_CHANGED == 'true') {
+                def terraformChanged = readFile('terraform_changed.flag').trim()
+                if (terraformChanged == 'true') {
                     echo "✅ Infrastructure updated and application deployed successfully!"
                 } else {
                     echo "✅ Application deployed successfully!"
