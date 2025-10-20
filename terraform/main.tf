@@ -21,7 +21,7 @@ provider "aws" {
 # ------------------------
 resource "aws_instance" "resume_evaluator" {
   ami                    = "ami-043339ea831b48099"
-  instance_type          = "t3.small"
+  instance_type          = "t3.micro"
   key_name               = "ResumeEvaluator"
   subnet_id              = "subnet-0d4dd138cb92009ae"
   vpc_security_group_ids = ["sg-023534ffa2f011bb9"]
