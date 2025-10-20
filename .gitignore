@@ -75,3 +75,8 @@ jspm_packages/
 # dotenv environment variables file
 .env 
 *.pem
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_amd64/terraform-provider-aws_v5.100.0_x5.exe
+terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.100.0/windows_amd64/LICENSE.txt
+terraform/.terraform.lock.hcl
+*.tfstate
+terraform/terraform.tfstate.backup

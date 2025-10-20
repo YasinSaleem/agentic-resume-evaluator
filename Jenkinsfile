@@ -91,6 +91,7 @@ pipeline {
                         
                         echo ""
                         echo "📊 Infrastructure Outputs:"
+                        terraform output -json > outputs.json
                         terraform output
                     '''
                 }
