@@ -70,7 +70,7 @@ export default function App({ Component, pageProps }) {
           <button
             onClick={toggleTheme}
             style={{
-              background: theme === 'light' ? activeTheme.accent : '#f5f5f4', // Use stone-100 for dark mode button
+              background: theme === 'light' ? activeTheme.accent : '#e3e311ff', // Use stone-100 for dark mode button
               color: activeTheme.text,
               border: `1px solid ${activeTheme.border}`,
               borderRadius: '50%',
