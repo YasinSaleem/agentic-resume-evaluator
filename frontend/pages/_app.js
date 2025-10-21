@@ -65,13 +65,13 @@ export default function App({ Component, pageProps }) {
             color: activeTheme.text,
             lineHeight: '1.2'
           }}>
-            Agentic Resume Evaluator - Testing with Friend
+            Agentic Resume Evaluator
           </div>
           <button
             onClick={toggleTheme}
             style={{
               background: theme === 'light' ? activeTheme.accent : '#f5f5f4', // Use stone-100 for dark mode button
-              color: activeTheme.text,
+              color: "#F54927",
               border: `1px solid ${activeTheme.border}`,
               borderRadius: '50%',
               width: '44px',
