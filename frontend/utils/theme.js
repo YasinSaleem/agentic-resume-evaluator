@@ -1,7 +1,7 @@
 // frontend/utils/theme.js
 export const lightTheme = {
   // Stone light theme colors - darker variant for more professional look
-  background: '#1aa5c5ff', // stone-100 (slightly darker)
+  background: '#f5f5f4', // stone-100 (slightly darker)
   text: '#1c1917', // stone-900 (darker text)
   card: '#ffffff', // white
   border: '#d6d3d1', // stone-300 (darker border)
