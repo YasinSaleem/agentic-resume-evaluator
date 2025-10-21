@@ -127,6 +127,15 @@ const Button = styled.button`
   }
 `;
 
+const EvaluateButton = styled(Button)`
+  background: #10b981; /* Custom green color */
+  &:hover {
+    background: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+`;
+
 const LoadingMessage = styled.div`
   text-align: center;
   color: ${({ theme }) => theme.text};
@@ -331,9 +340,9 @@ export default function Home() {
                   required
                 />
               </UploadLabel>
-              <Button type="submit" disabled={loading}>
+              <EvaluateButton type="submit" disabled={loading}>
                 {loading ? 'Analyzing...' : 'Evaluate Resume'}
-              </Button>
+              </EvaluateButton>
             </form>
           </Inner>
           
@@ -403,9 +412,9 @@ export default function Home() {
                     required
                   />
                 </UploadLabel>
-                <Button type="submit" disabled={loading}>
+                <EvaluateButton type="submit" disabled={loading}>
                   {loading ? 'Analyzing...' : 'Evaluate Resume'}
-                </Button>
+                </EvaluateButton>
               </form>
             </Inner>
             
